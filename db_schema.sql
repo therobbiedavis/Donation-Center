@@ -19,9 +19,9 @@ SET time_zone = "+00:00";
 --
 -- Database: `tsgadmin_chipin_db`
 --
-DROP DATABASE `chipin_db`;
-CREATE DATABASE `chipin_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `chipin_db`;
+DROP DATABASE `dc_db`;
+CREATE DATABASE `dc_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `dc_db`;
 
 -- --------------------------------------------------------
 
