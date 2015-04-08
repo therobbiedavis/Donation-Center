@@ -1,0 +1,12 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	background: url("http://donate.thespeedgamers.com/images/bg2.png") repeat scroll 0 0 transparent;
+}
+
+div {
+	font: 400 30px/1.3 'Bree Serif', serif;
+	color: #ddd;
+	text-shadow: -2px -2px #444;
+	margin: 10px;
+}

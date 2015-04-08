@@ -1,0 +1,30 @@
+/*  
+Theme Name: Streaming page
+Theme URI: http://www.thespeedgamers.com
+Author: Localretard
+Author URI: http://www.thespeedgamers.com
+
+
+*/
+
+
+/* -------------------[ Main Page Elements ]------------------- */
+html {
+margin:0;
+padding:0;
+}
+
+
+body {
+	color: #303324;
+	text-align: left;
+	padding: 0;
+	line-height: 140%;
+	margin: 0 auto;
+	text-align: center;
+	}
+
+html, body, span, p {
+	font: 14px/21px Arial,Helvetica,sans-serif;
+	
+}

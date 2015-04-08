@@ -1,0 +1,159 @@
+/**********
+iPhone 4+
+**********/
+@media
+only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px)
+and (orientation : landscape)
+and (-webkit-min-device-pixel-ratio : 2) {
+
+
+}
+
+*{
+	/* Universal page reset */
+	margin:0;
+	padding:0;
+}
+
+body{
+	/* Setting default text color, background and a font stack */
+	font-size:1em;
+	color:#333;
+	background: url("../images/bg2.png") repeat scroll 0 0 transparent;
+	font-family: 'PT Sans Narrow', sans-serif;
+}
+
+p {
+	display:block;
+	font-size:14px;
+	font-weight: 300;
+	font-family: 'PT Sans Narrow', sans-serif;
+	-webkit-font-smoothing: antialiased !important;
+	text-shadow: rgba(0, 0, 0, 0.00392157) 1px 1px 1px;
+}
+
+
+h2{
+	font-family: 'Oswald', sans-serif;
+	color:#333;
+	font-weight: 400;
+	font-size:3.0em;
+	height:40px;
+	line-height:40px;
+	margin:0 0 0;
+	padding:20px 0 20px 0px;
+	-webkit-font-smoothing: antialiased !important;
+	text-shadow: rgba(0, 0, 0, 0.00392157) 1px 1px 1px;
+}
+
+h3{
+	display:block;
+	font-size:21px;
+	font-weight: 300;
+	font-family: 'PT Sans Narrow', sans-serif;
+	-webkit-font-smoothing: antialiased !important;
+	text-shadow: rgba(0, 0, 0, 0.00392157) 1px 1px 1px;
+}
+
+label{
+	display:block;
+	font-size:20px;
+	font-weight: 300;
+	font-family: 'PT Sans Narrow', sans-serif;
+	-webkit-font-smoothing: antialiased !important;
+	text-shadow: rgba(0, 0, 0, 0.00392157) 1px 1px 1px;
+}
+
+.container {
+	width:950px;
+	background: #eee;
+	margin: 0 auto;
+	padding: 10px;
+}
+
+.custom {
+	width: 215px;
+	margin: 0 auto;
+}
+
+.preset-box {
+	font-family: "PT Sans Narrow", sans serif;
+	padding: 0 10px;
+	margin:0 10px;
+	line-height: 100px;
+	font-size: 40px;
+	width: 150px;
+	height: 100px;
+	color: #333;
+	background-color: #fff;
+	border-radius: 2px;
+	border: 1px solid #ddd;
+	position: relative;
+	display:inline-block;
+	font-weight: 700;
+	opacity: 0.7;
+	-webkit-appearance: none;
+}
+
+
+.preset-box .selected {
+	opacity: 1;
+}
+
+.class {
+	width:200px;
+	margin:0 auto;
+}
+
+
+input[type="submit"] {
+	font-family: "PT Sans Narrow", sans serif;
+	padding: 0 10px;
+	margin:0 20px;
+	line-height: 20px;
+	font-size: 20px;
+	width: 100px;
+	height: 40px;
+	color: #333;
+	background-color: #eaeaea;
+	border-radius: 2px;
+	border: 1px solid #ddd;
+	position: relative;
+	display:inline-block;
+	font-weight: 700;
+	-webkit-appearance: none;
+}
+
+input[type="submit"]:active {
+	font-family: "PT Sans Narrow", sans serif;
+	padding: 0 10px;
+	margin:0 20px;
+	line-height: 20px;
+	font-size: 20px;
+	width: 100px;
+	height: 40px;
+	color: #666;
+	background-color: #aaa;
+	border-radius: 2px;
+	border: 1px solid #ddd;
+	position: relative;
+	display:inline-block;
+	font-weight: 700;
+}
+
+input[type="text"] {
+	font-family: "PT Sans Narrow", sans serif;
+	padding: 0 10px;
+	margin:0 20px;
+	line-height: 20px;
+	font-size: 20px;
+	height: 40px;
+	color: #333;
+	border-radius: 2px;
+	border: 1px solid #ddd;
+	position: relative;
+	display:inline-block;
+	font-weight: 700;
+}

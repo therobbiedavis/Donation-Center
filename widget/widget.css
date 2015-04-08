@@ -1,0 +1,236 @@
+html,body,div,ul,ol,li,dl,dt,dd,h1,h2,h3,h4,h5,h6,pre,form,p,blockquote,fieldset,input,hr {margin:0; padding:0;}
+h1,h2,h3,h4,h5,h6,pre,code,address,caption,cite,code,em,strong,th {font-size:1em; font-weight:normal; font-style:normal;}
+ul,ol {list-style:none;}
+field set,img,hr {border:none;}
+caption,th {text-align:left;}
+table {border-collapse:collapse; border-spacing:0;}
+td {vertical-align:top;}
+
+
+body {
+width:260px;
+}
+
+#widgetContainer {
+max-width: 250px;
+min-width: 250px;
+padding: 0 10px 25px;
+background: #F3F3F3;
+background: -webkit-gradient(linear, 0 0, 0 bottom, from(#F3F3F3), to(#EEEEEE));
+background: -webkit-linear-gradient(#F3F3F3, #EEEEEE);
+background: -moz-linear-gradient(#F3F3F3, #EEEEEE);
+background: -ms-linear-gradient(#F3F3F3, #EEEEEE);
+background: -o-linear-gradient(#F3F3F3, #EEEEEE);
+background: linear-gradient(#F3F3F3, #EEEEEE);
+-pie-background: linear-gradient(#F3F3F3, #EEEEEE);
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
+border-radius: 3px;
+behavior: url(PIE.php);
+border:1px solid #aaa;
+color: #333;
+}
+
+#refresh{
+padding: 0;
+position: relative;
+right: -10px;
+top: 2px;
+float: right;
+cursor: pointer;
+}
+
+.donationInfo{
+font-size: 20px;
+font-family: 'Open Sans', sans-serif;
+text-align: right;
+width: 85%;
+}
+
+.donationInfo span{
+font-size: 20px;
+font-weight: 700;
+}
+
+.donateimg {
+margin: 0;
+padding: 0;
+}
+
+.donateimg img {
+margin: 0 0;
+padding: 0;
+border: 0;
+}
+
+.donationInfo .charities {
+font-size: 12px;
+list-style: none;
+text-align: left;
+float: right;
+}
+
+.marathonInfo {
+padding:0;
+margin:0;
+}
+
+.marathonInfo p{
+font-size: 12px;
+font-family: 'Open Sans', sans-serif;
+text-align: center;
+color: #333;
+margin:5px 0;
+}
+
+.button-box {
+text-align: center;
+width:100%;
+margin: 10px 0 0;
+clear:both;
+}
+
+.button a{
+color: #fff;
+text-decoration: none;
+}
+
+
+.button {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
+	behavior: url(http://www.thespeedgamers.com/wp-content/themes/js/PIE.php);
+	display: inline-block;
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	padding: .5em 2em .55em;
+	text-shadow: 0 1px 1px rgba(0,0,0,.3);
+	-webkit-border-radius: .5em; 
+	-moz-border-radius: .5em;
+	border-radius: .5em;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+.button:hover {
+	text-decoration: none;
+}
+.button:active {
+	position: relative;
+	top: 1px;
+}
+
+.gray {
+	color: #E9E9E9;
+	border: 1px solid #555555;
+	background: -webkit-gradient(linear, left top, left bottom, from(#888888), to(#575757));
+	background: -moz-linear-gradient(top,  #888888,  #575757);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#888888', endColorstr='#575757');
+	-pie-background: linear-gradient(#888888, #575757);
+}
+
+.gray:hover {
+	background: -webkit-gradient(linear, left top, left bottom, from(#757575), to(#4B4B4B));
+	background: -moz-linear-gradient(center top , #757575, #4B4B4B) repeat scroll 0 0 transparent;
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#757575', endColorstr='#4B4B4B');
+	-pie-background: linear-gradient(#757575, #4B4B4B);
+}
+
+.gray:active {
+	color: #fcd3a5;
+	background: -webkit-gradient(linear, left top, left bottom, from(#575757), to(#888888));
+	background: -moz-linear-gradient(center top , #575757, #888888) repeat scroll 0 0 transparent;
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#575757', endColorstr='#888888');
+	-pie-background: linear-gradient(#575757, #888888);
+}
+
+   
+.ui-progressbar {
+	height:23px;
+	margin: 5px 0 10px;
+	width:248px;
+
+}
+
+#progressbar span {
+	line-height:23px;
+	position: relative;
+	z-index: 99;
+	font-family: 'Open Sans', sans-serif;
+}
+
+.ui-progressbar .ui-progressbar-value {
+position: relative;
+	
+}
+
+#moreInfo {
+display:none;
+position:absolute;
+width: 250px;
+height: 260px;
+min-height: 247px;
+padding: 0 10px 10px;
+background: #eee;
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
+border-radius: 3px;
+behavior: url(PIE.php);
+border:1px solid #aaa;
+color: #333;
+z-index: 999;
+max-height: 265px;
+}
+
+#moreInfo div{
+font-family: 'Open Sans', sans-serif;
+font-size: 14px;
+margin: 0;
+padding: 20px 0 0;
+font-weight: normal;
+}
+
+#moreInfo textarea{
+	width: 230px;
+	max-width: 230px;
+	height: 55px;
+	max-height: 55px;
+    background: none repeat scroll 0 0 #F6F6F6;
+    border-color: #A4A4A4 #B9B9B9 #B9B9B9;
+    border-radius: 3px 3px 3px 3px;
+    border-right: 1px solid #B9B9B9;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: 0 1px 0 #FFFFFF, 0 1px 1px rgba(0, 0, 0, 0.17) inset;
+    color: #666666;
+    font-size: 11px;
+    padding: 7px 10px;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+ #moreInfo textarea  { max-height: 40px;  }
+}
+
+#moreInfoLink {
+float: right;
+font: bold 11px/1.6 Helvetica,Arial,sans-serif;
+font-weight:normal;
+margin:0;
+padding:0;
+cursor: pointer;
+}
+
+#moreInfoLink:hover {
+text-decoration:underline;
+}
+
+#closeInfoLink {
+float: right;
+font: bold 11px/1.6 Helvetica,Arial,sans-serif;
+font-weight:normal;
+margin:0;
+padding:5px 0;
+cursor: pointer;
+}
