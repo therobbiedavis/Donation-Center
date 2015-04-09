@@ -20,12 +20,14 @@ class Membership {
 				session_destroy();
 			}
 		}
-	session_start();
+	session_start();
+
 			$sid = session_id();
 			$mysql = New Mysql();
 			if ($mysql->unset_sid($sid)) {
 				return true;
 			}
+<<<<<<< HEAD
 	}
 	function sid($un){
 		session_start();
@@ -35,7 +37,8 @@ class Membership {
 			return "Success!";
 		}
 	}
-	function confirm_Member() {
+
+	function confirm_Member() {
 		session_start();
 		if($_SESSION['status'] !='authorized') header("location: login.php");
 	}
