@@ -15,17 +15,20 @@ var formatwibar = "format=wibar";
 //If src substring = ?small then load small widget
 /////////////////
 
+var host = "http://"+window.location.hostname;
+
 if (myScriptsub == formatforum){
 
-if (typeof jQuery == 'undefined') {  
+if (typeof jQuery == 'undefined') {
     document.write("<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript'></script>");
 } else {
     // jQuery is loaded
 }
 
 
-function loadWidgetforum(){   
-var url = 'http://donate.thespeedgamers.com/widget/load-forum.php?id='+eventIDsub;
+function loadWidgetforum(){
+
+var url = host+'/Donation-Center/widget/load-forum.php?eid='+eventIDsub;
 $('#tsgDonationWidget').attr('src', url);
 }
 
@@ -33,7 +36,7 @@ window.setInterval("loadWidgetforum()",300000 );
 
 
 
-document.write("<iframe scrolling='no' style='margin:0;padding:0;border:none;' frameBorder='0' width='100%' height='80' style='' id='tsgDonationWidget' src='http://donate.thespeedgamers.com/widget/load-forum.php?id="+eventIDsub+"'></iframe>");
+document.write("<iframe scrolling='no' style='margin:0;padding:0;border:none;' frameBorder='0' width='100%' height='80' style='' id='tsgDonationWidget' src= "+host+"/Donation-Center/widget/load-forum.php?eid="+eventIDsub+"></iframe>");
 
 } else if (myScriptsub == formatwibar) {
 
@@ -41,14 +44,14 @@ document.write("<iframe scrolling='no' style='margin:0;padding:0;border:none;' f
 //Else if load small sized widget
 //////////////////
 
-if (typeof jQuery == 'undefined') {  
+if (typeof jQuery == 'undefined') {
     document.write("<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript'></script>");
 } else {
     // jQuery is loaded
 }
 
 
-function loadWidgetbar(){   
+function loadWidgetbar(){
 var url = 'http://donate.thespeedgamers.com/widget/load-bar.php?id='+eventIDsub;
 $('#tsgDonationWidget').attr('src', url);
 }
@@ -65,14 +68,14 @@ document.write("<iframe scrolling='no' style='margin:0;padding:0;border:none;' f
 //Else if load small sized widget
 //////////////////
 
-if (typeof jQuery == 'undefined') {  
+if (typeof jQuery == 'undefined') {
     document.write("<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript'></script>");
 } else {
     // jQuery is loaded
 }
 
 
-function loadWidgetvert(){   
+function loadWidgetvert(){
 var url = 'http://donate.thespeedgamers.com/widget/load-vert.php?id='+eventIDsub;
 $('#tsgDonationWidget').attr('src', url);
 }
@@ -90,14 +93,14 @@ document.write("<iframe scrolling='no' style='margin:0;padding:0;border:none;' f
 //Else if load small sized widget
 //////////////////
 
-if (typeof jQuery == 'undefined') {  
+if (typeof jQuery == 'undefined') {
     document.write("<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript'></script>");
 } else {
     // jQuery is loaded
 }
 
 
-function loadWidgetsmall(){   
+function loadWidgetsmall(){
 var url = 'http://donate.thespeedgamers.com/widget/load-small.php?id='+eventIDsub;
 $('#tsgDonationWidget').attr('src', url);
 }
@@ -113,14 +116,14 @@ document.write("<iframe scrolling='no' style='margin:0;padding:0;border:none;' f
 //Else load regular size widget
 //////////////////
 
-if (typeof jQuery == 'undefined') {  
+if (typeof jQuery == 'undefined') {
     document.write("<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript'></script>");
 } else {
     // jQuery is loaded
 }
 
 
-function loadWidget(){   
+function loadWidget(){
 
 var url = 'http://donate.thespeedgamers.com/widget/load.php?id='+eventIDsub;
 $('#tsgDonationWidget').attr('src', url);
@@ -130,6 +133,3 @@ window.setInterval("loadWidget()",300000 );
 
 document.write("<iframe scrolling='no' style='border:none;' frameBorder='0' width='290' height='280' style='' id='tsgDonationWidget' src='http://donate.thespeedgamers.com/widget/load.php?id="+eventIDsub+"'></iframe>");
 }
-
-
-

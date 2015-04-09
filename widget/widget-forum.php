@@ -1,11 +1,8 @@
 <?php
 ob_start();
-
-include('variables.php');
-
-$id = $_GET['id'];
-
-$url = "http://donate.thespeedgamers.com/xml/".$id.".xml";
+$site_url = "http://".$_SERVER['SERVER_NAME'].'/Donation-Center/';
+$eid = $_GET['eid'];
+$url = $site_url."xml/".$eid.".xml";
 
 
 //Checking to see if Chipin is up
@@ -16,7 +13,7 @@ curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 ob_start();
 $xml = curl_exec($ch);
 ob_end_clean();
-curl_close ($ch); 
+curl_close ($ch);
 if (!$xml){
 
 } else {
@@ -77,28 +74,28 @@ $progress = number_format($progresscalc, 2);
 
 		var reloading = true;
 		window.setTimeout(function () { reloading = false; }, 10000);
-	
+
 		function reload() {
 			if (!reloading){
 				reloading = true;
 				document.location.reload();
 			}
 		}
-		
+
 	</script>
 
 
 <div id="widgetContainer" class="bg3 forum-bg">
 
 	<div class="marathonInfo">
-		<span id="refresh" onClick="reload()"><img src="images/refresh.png" width="15" height="15" alt="refresh"/></span>
-		<p>Donate <a href="<? echo $charity_url; ?>" target="_blank"><? echo $event_title; ?></a></p>
+		<span id="refresh" onClick="reload()"><img src="<?php echo $site_url;?>widget/images/refresh.png" width="15" height="15" alt="refresh"/></span>
+		<p>Donate <a href="<?php echo $charity_url; ?>" target="_blank"><?php echo $event_title; ?></a></p>
 	</div>
 
-<div id="inline">	
+<div id="inline">
 	<div id="progressbar">
 			<?php if (!$xml){ echo '<span>(We\'ll be back soon.)</span></div>'; } else { ?>
-			<?php if ($donationgoal != 0) { ?><span>$<? echo number_format((double)$donationtotal, 2, '.',','); ?> of $<? echo number_format((double)$donationgoal, 2, '.',','); ?> (<? echo $progress; ?>%)</span> <?php } else { ?>
+			<?php if ($donationgoal != 0) { ?><span>$<? echo number_format((double)$donationtotal, 2, '.',','); ?> of $<?php echo number_format((double)$donationgoal, 2, '.',','); ?> (<?php echo $progress; ?>%)</span> <?php } else { ?>
 			<span><?php echo "Raised $".number_format((double)$donationtotal, 2, '.',','); ?>
 		 <?php } ?>
 	</div>
@@ -112,17 +109,17 @@ $progress = number_format($progresscalc, 2);
 	</div>
 
 	<?php } else { ?>
-	
+
 	<div class="button-box">
 		<div class="button gray">
 		<?php if (!$xml){ ?>
 			<a target="_blank">Wait</a>
 		<?php } else { ?>
-			<a href="http://donate.thespeedgamers.com/?eid=<? echo $id ?>" target="_blank">Donate</a>
+			<a href= <?php echo $site_url;?>"/?eid=<?php echo $eid ?>" target="_blank">Donate</a>
 			<?php } ?>
 		</div>
 	</div>
-	
+
 	<?php } ?>
 </div>
 </div>
@@ -135,9 +132,9 @@ $progress = number_format($progresscalc, 2);
   $output = ob_get_contents();
   ob_end_clean();
   echo $output;
-
-  $file = fopen('/home/tsgadmin/public_html/donate.thespeedgamers.com/widget/cache/widget-forum.'.$id.'.cache', 'w');
+	$sitePath = getcwd();
+  $file = fopen($sitePath.'/widget/cache/widget-forum.'.$id.'.cache', 'w');
   fwrite($file, $output);
   fclose($file);
- 
+
 ?>

@@ -15,6 +15,7 @@ setlocale(LC_MONETARY, 'en_US');
 // Determining the URL of the page:
 $url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER["REQUEST_URI"]);
 $params = array(':eid' => $_GET['eid']);
+$eid = $_GET['eid'];
 
 //Setting up queries
 //Query for comments
@@ -62,7 +63,7 @@ $incentivesum->execute($params);
 		</div>
 
 <div id="main">
-    <script src="//donate.thespeedgamers.com/widget.js?format=forum&eid=<?php echo $id; ?>" type="text/javascript"></script>
+    <script src="http://<?php echo $_SERVER['SERVER_NAME'];?>/Donation-Center/widget.js?format=forum&eid=<?php echo $eid; ?>" type="text/javascript"></script>
 
 
 	<div id="incentives">
@@ -144,7 +145,7 @@ $incentivesum->execute($params);
 			<div class="comments">
 <?php
 			// Building the Donor List:
-			if($comments->rowCount() > 0))
+			if($comments->rowCount() > 0)
 			{
 				while($row = $comments->fetchAll())
 				{
