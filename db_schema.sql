@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.5
+-- version 4.1.14
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Apr 08, 2015 at 02:01 AM
--- Server version: 5.1.68-cll
--- PHP Version: 5.3.17
+-- Host: 127.0.0.1
+-- Generation Time: Apr 09, 2015 at 09:08 PM
+-- Server version: 5.6.17
+-- PHP Version: 5.5.12
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -17,10 +17,9 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `tsgadmin_chipin_db`
+-- Database: `dc_db`
 --
-DROP DATABASE `dc_db`;
-CREATE DATABASE `dc_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS `dc_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `dc_db`;
 
 -- --------------------------------------------------------
@@ -86,6 +85,13 @@ CREATE TABLE IF NOT EXISTS `dc_events` (
   PRIMARY KEY (`event_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `dc_events`
+--
+
+INSERT INTO `dc_events` (`event_id`, `user_id`, `title`, `charity_name`, `image_url`, `paypal_email`, `url`, `event_url`, `targetAmount`, `startDate`, `endDate`, `current`, `dt`) VALUES
+('5525d878d9bfc', 1, 'test', 'Robbie Davis', '', 'robbie@therobbiedavis.com', 'http://therobbiedavis.com', 'http://therobbiedavis.com', 100, 1428543600, 1430358008, 0, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -146,10 +152,18 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(15) NOT NULL DEFAULT '',
-  `password` varchar(45) NOT NULL DEFAULT '',
+  `password` varchar(70) NOT NULL DEFAULT '',
+  `email` varchar(50) NOT NULL,
   `sessionid` text,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `password`, `email`, `sessionid`) VALUES
+(1, 'admin', '$2y$08$pXntAPXFoMcNpZitz.v8r.AW.OqeVv24DR/ljGmmGO4qMcUKKJwCy', 'admin@domain.com', 'la0he1k29surc8gcrok6dmj8i3');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

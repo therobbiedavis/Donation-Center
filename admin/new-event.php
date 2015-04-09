@@ -1,6 +1,4 @@
 <?php
-
-require "config.php";
 require "connect.php";
 
 require_once '../classes/Membership.php';

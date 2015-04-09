@@ -1,6 +1,5 @@
 <?php
 
-require "config.php";
 require "connect.php";
 
 require_once '../classes/Membership.php';
@@ -15,22 +14,28 @@ setlocale(LC_MONETARY, 'en_US');
 
 // Determining the URL of the page:
 $url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER["REQUEST_URI"]);
-$id = $_GET['id'];
+$params = array(':eid' => $_GET['eid']);
 
 //Setting up queries
 //Query for comments
-$comments = $link->query("SELECT dc_comments.name, dc_comments.email, dc_comments.message, dc_donations.dt, dc_donations.donation_amount, dc_comments.incentive, dc_donations.event_id, dc_events.event_id, dc_events.current FROM dc_comments, dc_donations, dc_events WHERE dc_donations.transaction_id = dc_comments.transaction_id AND dc_donations.event_id = dc_events.event_id AND dc_events.event_id = '" . mysqli_real_escape_string($link, $id) . "' ORDER BY id DESC");
+$comments = $link->prepare('SELECT dc_comments.name, dc_comments.email, dc_comments.message, dc_donations.dt, dc_donations.donation_amount, dc_comments.incentive, dc_donations.event_id, dc_events.event_id, dc_events.current FROM dc_comments, dc_donations, dc_events WHERE dc_donations.transaction_id = dc_comments.transaction_id AND dc_donations.event_id = dc_events.event_id AND dc_events.event_id = :eid ORDER BY id DESC');
 
 //Query for list
-$list = $link->query("SELECT dc_donations.name, dc_donations.donor_email, dc_donations.donation_amount, dc_donations.dt, dc_events.event_id FROM dc_donations , dc_events WHERE dc_donations.event_id = dc_events.event_id AND dc_events.event_id = '" . mysqli_real_escape_string($link, $id) . "' ORDER BY dc_donations.dt DESC");
+$list = $link->prepare('SELECT dc_donations.name, dc_donations.donor_email, dc_donations.donation_amount, dc_donations.dt, dc_events.event_id FROM dc_donations , dc_events WHERE dc_donations.event_id = dc_events.event_id AND dc_events.event_id = :eid ORDER BY dc_donations.dt DESC');
 
 //Query for incentives
-$incentives = $link->query("SELECT dc_incentives.id, dc_incentives.name, dc_incentives.hidden, dc_incentives.incentive, dc_incentives.event_id, dc_events.event_id FROM dc_incentives, dc_events WHERE dc_incentives.event_id = dc_events.event_id AND dc_events.event_id = '" . mysqli_real_escape_string($link, $id) . "' ORDER BY dc_incentives.dt DESC");
+$incentives = $link->prepare('SELECT dc_incentives.id, dc_incentives.name, dc_incentives.hidden, dc_incentives.incentive, dc_incentives.event_id, dc_events.event_id FROM dc_incentives, dc_events WHERE dc_incentives.event_id = dc_events.event_id AND dc_events.event_id = :eid ORDER BY dc_incentives.dt DESC');
 
 //Query for sum and total donors
-$sum = $link->query("SELECT SUM(donation_amount) AS Total, COUNT(name) AS Donors FROM dc_donations WHERE event_id = '" . mysqli_real_escape_string($link, $id) . "' ");
+$sum = $link->prepare('SELECT SUM(donation_amount) AS Total, COUNT(name) AS Donors FROM dc_donations WHERE event_id = :eid ');
 
-$incentivesum = $link->query("SELECT dc_incentives.name, SUM(donation_amount) AS Total FROM dc_comments, dc_donations, dc_incentives WHERE dc_donations.transaction_id = dc_comments.transaction_id AND dc_donations.event_id = '" . mysqli_real_escape_string($link, $id) . "' AND dc_comments.incentive = dc_incentives.id and dc_comments.incentive = '2'");
+$incentivesum = $link->prepare("SELECT dc_incentives.name, SUM(donation_amount) AS Total FROM dc_comments, dc_donations, dc_incentives WHERE dc_donations.transaction_id = dc_comments.transaction_id AND dc_donations.event_id = :eid AND dc_comments.incentive = dc_incentives.id and dc_comments.incentive = '2'");
+
+$comments->execute($params);
+$list->execute($params);
+$incentives->execute($params);
+$sum->execute($params);
+$incentivesum->execute($params);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -59,134 +64,149 @@ $incentivesum = $link->query("SELECT dc_incentives.name, SUM(donation_amount) AS
 <div id="main">
     <script src="//donate.thespeedgamers.com/widget.js?format=forum&eid=<?php echo $id; ?>" type="text/javascript"></script>
 
-	
+
 	<div id="incentives">
 	<h3>Incentives <a href='addIncentive.php?id=<?php echo $id ?>'>Add One</a></h3>
-	<?php
-			if(mysqli_num_rows($incentives))
-			{ ?>
-							<table>
+<?php
+		if($incentives->rowCount() > 0) {
+?>
+			<table>
 				<tr>
-				<th>Name:</th>
-				<th>Amount:</th>
-				<th>Total:</th>
+					<th>Name:</th>
+					<th>Amount:</th>
+					<th>Total:</th>
 				</tr>
-			<?php
-				while($row = mysqli_fetch_assoc($incentives))
-				{ 
-				$incentivesum = $link->query("SELECT dc_incentives.name, SUM(donation_amount) AS Total FROM dc_comments, dc_donations, dc_incentives WHERE dc_donations.transaction_id = dc_comments.transaction_id AND dc_donations.event_id = '" . mysqli_real_escape_string($link, $id) . "' AND dc_comments.incentive = dc_incentives.id and dc_comments.incentive = '".$row['id']."'");
+<?php
+				while($row = mysqli_fetch_assoc($incentives)) {
+					$incentivesum = $link->query("SELECT dc_incentives.name, SUM(donation_amount) AS Total FROM dc_comments, dc_donations, dc_incentives WHERE dc_donations.transaction_id = dc_comments.transaction_id AND dc_donations.event_id = '" . mysqli_real_escape_string($link, $id) . "' AND dc_comments.incentive = dc_incentives.id and dc_comments.incentive = '".$row['id']."'");
+
 					while($row2 = mysqli_fetch_assoc($incentivesum)) {
-				?>
+?>
 
-				<tr>
-                    	<td>
-				<?php echo stripslashes($row['name']);?>
-					</td>
-					<td>
-				<?php echo stripslashes('$'.$row['incentive']);?>
-					</td>
-					                    	<td>
-				<?php echo stripslashes('$'.$row2['Total']);?>
-					</td>
-					<td>
-					<?php if ($row["hidden"] == 1) {?>
-						<a href="./functions.php?f=hideincent&iid=<?php echo $row['id'];?>&hide=0">Unhide</a>
-					<? } else { ?>
-						<a href="./functions.php?f=hideincent&iid=<?php echo $row['id'];?>&hide=1">Hide</a>
-					<? } ?>
-					</td>
-					<td>
-					<a style="color:red" href="./functions.php?f=deleteincent&iid=<?php echo $row['id'];?>">Delete</a>
-					</td>
-                   
-                    
-					<?php
-				} ?>
-				
-				<?php }
-				
-			} else { ?>
-			
+						<tr>
+							<td>
+<?php
+								echo stripslashes($row['name']);
+?>
+							</td>
+							<td>
+<?php
+								echo stripslashes('$'.$row['incentive']);
+?>
+							</td>
+							<td>
+<?php
+								echo stripslashes('$'.$row2['Total']);
+?>
+							</td>
+							<td>
+<?php
+								if ($row["hidden"] == 1) {
+?>
+									<a href="./functions.php?f=hideincent&iid=<?php echo $row['id'];?>&hide=0">Unhide</a>
+<?php
+								} else {
+?>
+									<a href="./functions.php?f=hideincent&iid=<?php echo $row['id'];?>&hide=1">Hide</a>
+<?php
+								}
+?>
+							</td>
+							<td>
+								<a style="color:red" href="./functions.php?f=deleteincent&iid=<?php echo $row['id'];?>">Delete</a>
+							</td>
+
+
+<?php
+					}
+?>
+
+<?php
+				}
+
+		} else {
+
+?>
 			<p>
-				<?php echo "No Incentives Yet. <a href='addIncentive.php?id=". $id ."'>Add One</a>";?>
+<?php
+				echo "No Incentives Yet. <a href='addIncentive.php?id=". $id ."'>Add One</a>";
+?>
 			</p>
-			<?php } ?>
-			</table>
-	</div>
-	
-    <div class="donors">
-	<a name="donors"></a>
-        <h3>The Comments <span style="font-size:0.3em"><a href="#list">View the donations</a></span></h3>
-        
-        <div class="comments">
-        
-        <?php
+<?php
+		}
+?>
+	</table>
+</div>
 
-			
+<div class="donors">
+	<a name="donors"></a>
+    <h3>The Comments <span style="font-size:0.3em"><a href="#list">View the donations</a></span></h3>
+			<div class="comments">
+<?php
 			// Building the Donor List:
-			
-			if(mysqli_num_rows($comments))
+			if($comments->rowCount() > 0))
 			{
-				while($row = mysqli_fetch_assoc($comments))
+				while($row = $comments->fetchAll())
 				{
-					?>
-                    
-                       	<div class="entry">
-                            <p class="comment">
-                            <?php 
+?>
+					<div class="entry">
+            <p class="comment">
+<?php
 								echo stripslashes(nl2br(urldecode($row['message']))); // Converting the newlines of the comment to <br /> tags
-							?>
-							<?php
-							$incentivename = $link->query("SELECT name FROM dc_incentives WHERE event_id = '" . mysqli_real_escape_string($link, $id) . "' and id = '". $row['incentive'] . "'");
-							$name = mysqli_fetch_assoc($incentivename);
-							if ($name > 0) {
-							echo "<br/><span style='font-size:12px'>Donated for " .$name['name']. "</span>";
-							}
-							?>
+?>
+<?php
+								$incentivename = $link->query("SELECT name FROM dc_incentives WHERE event_id = '" . mysqli_real_escape_string($link, $id) . "' and id = '". $row['incentive'] . "'");
+
+								$name = mysqli_fetch_assoc($incentivename);
+
+								if ($name > 0) {
+										echo "<br/><span style='font-size:12px'>Donated for " .$name['name']. "</span>";
+								}
+?>
                             <span class="tip"></span>
                             </p>
-                            
+
                             <div class="name">
                                 <?php echo $row['name']?> <a class="url" href="mailto:<?php echo $row['email']?>">(Email)</a> - Donated <?php echo money_format('%.2n', $row['donation_amount']);?> - <span class="url"><? echo date('F j  -  g:i a', strtotime($row["dt"])); ?></span>
                             </div>
                         </div>
-                    
+
 					<?php
 				}
-				
+
 			} else { ?>
 			<p class="comment">
 				<?php echo "No Comments Yet";?>
 			</p>
 			<?php } ?>
-        
-            
+
+
         </div> <!-- Closing the comments div -->
-        
-		
+
+
 <?php
 			// Building the Donor List:
-			
+
 			if(mysqli_num_rows($list))
 			{
 			$fp = fopen('download/'.$id.'.csv', 'w');
-				while($row = mysqli_fetch_assoc($list)) { 
+				while($row = mysqli_fetch_assoc($list)) {
 					$array[] = $row;
 				}
-			
+
 				foreach ($array as $fields) {
 					fputcsv($fp, $fields);
 				}
-			
+
 			fclose($fp);
 			?>
-			
-        
+
+
         <h3><a name="list"></a>The Donor List <span style="font-size:0.5em">(<a href="download/<?php echo $id ?>.csv">Export list to CSV</a>)</span> <span style="font-size:0.3em"><a href="#donors">View the comments</a></span></h3>
         <div class="list">
-        
 
-			
+
+
 			<table>
 				<tr>
 				<th>Name:</th>
@@ -205,7 +225,7 @@ $incentivesum = $link->query("SELECT dc_incentives.name, SUM(donation_amount) AS
                     		<?php echo $fields['donor_email'] ?>
                     	</td>
                     	<td>
-                    		<?php 
+                    		<?php
                     		setlocale(LC_MONETARY, 'en_US');
                     		echo money_format('%.2n', $fields['donation_amount']); ?>
                     	</td>
@@ -215,25 +235,25 @@ $incentivesum = $link->query("SELECT dc_incentives.name, SUM(donation_amount) AS
                     		?>
                     	</td>
                     </tr>
-                    
+
 					<?php
 				}
 			}
 		?>
 			</table>
-			
-			
-            
+
+
+
         </div>
-		
+
 		       <h3>The Sum</h3>
         <div class="list">
-        
+
                 <?php
 
-			
+
 			// Building the Donor List:
-			
+
 			if(mysqli_num_rows($sum))
 			{
 			?>
@@ -249,19 +269,19 @@ $incentivesum = $link->query("SELECT dc_incentives.name, SUM(donation_amount) AS
                     		<?php echo money_format('Total: %.2n', $row['Total']); ?>
                     	</td>
                     </tr>
-                    
+
 					<?php
 				}
 			}
 		?>
 			</table>
-			
-			
-            
+
+
+
         </div>
-        
+
     </div> <!-- Closing the donors div -->
-    
+
 </div> <!-- Closing the main div -->
 
 <?php mysqli_close($link); ?>
