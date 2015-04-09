@@ -1,22 +1,9 @@
-<?php
-
-/* Database config */
-
-$db_host		= 'localhost';
-$db_user		= 'user';
-$db_pass		= 'pass';
-$db_database		= 'dbname';
-
-/* End config */
-
-
-$link = new mysqli($db_host,$db_user,$db_pass,$db_database);
-
-if($db->connect_errno > 0){
-    die('Unable to connect to database [' . $db->connect_error . ']');
-}
-
-mysqli_set_charset($link, 'utf8');
-//mysql_select_db($db_database,$link);
-
+<?phprequire_once '/../includes/config.php';
+try {
+  $link = new PDO("mysql:host=".DB_SERVER.";dbname=".DB_NAME.";charset=utf8", DB_USER, DB_PASSWORD);
+}
+catch (PDOException $e){
+  echo 'Connection failed: ' . $e->getMessage();
+}
+
 ?>
