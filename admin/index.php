@@ -1,23 +1,23 @@
 <?php
 
-require "config.php";
-require "connect.php";
+require_once "connect.php";
 
 require_once '../classes/Membership.php';
 $membership = New Membership();
 
 $membership->confirm_Member();
-session_start();
 $sid = session_id();
-$userid = mysqli_query($link, "SELECT id FROM users WHERE sessionid = '$sid'");
+$params = array(':sid' => $sid);
+$userid = $link->prepare("SELECT id FROM users WHERE sessionid = :sid");
+$userid->execute($params);
 
-while ($row = $userid->fetch_assoc()) {
-$getEvents = mysqli_query($link, "SELECT * FROM `dc_events` WHERE user_id ='".$row["id"]."'");
+while ($row = $userid->fetch(PDO::FETCH_ASSOC)) {
+	$params = array(':id' => $row["id"]);
+	$getEvents = $link->prepare("SELECT * FROM `dc_events` WHERE user_id = :id");
+	$getEvents->execute($params);
 }
-$event = array();
-while ($event = mysqli_fetch_assoc($getEvents)) {
-	$events[] = $event;
-}
+
+
 
 
 ?>
@@ -39,7 +39,7 @@ while ($event = mysqli_fetch_assoc($getEvents)) {
 <div id="nav">
 	<ul>
 		<li><a href="/admin">Admin Home</a> &bull;</li>
-		<li><a href="/admin/new-event.php">New Event</a> &bull;</li>
+		<li><a href="new-event.php">New Event</a> &bull;</li>
 		<li><a href="login.php?status=loggedout">Log Out</a></li>
 	</ul>
 </div>
@@ -53,37 +53,40 @@ while ($event = mysqli_fetch_assoc($getEvents)) {
 			<th></th>
 			<th></th>
     </tr>
-    <?php if ($events != null) {
-					foreach ($events as $g) {?>
-<?
-$sum = $link->query("SELECT SUM(donation_amount) AS Total, COUNT(name) AS Donors FROM dc_donations WHERE event_id = '" . mysqli_real_escape_string($link, $g['event_id']) . "' ");
+<?php
+while ($event = $getEvents->fetchAll()) {
+		if ($event != null) {
+					foreach ($event as $g) {
+						$params = array(':eid' => $g['event_id']);
+						$sum = $link->prepare("SELECT SUM(donation_amount) AS Total, COUNT(name) AS Donors FROM dc_donations WHERE event_id = :eid");
+						$sum->execute($params);
 ?>
     <tr>
       <td><?=$g['title']?></td>
-	  <td><?php if(mysqli_num_rows($sum))
+	  <td><?php if($sum->rowCount() > 0)
 			{
 			?>
 			<?php
-				while($row = mysqli_fetch_assoc($sum))
+				while($row = $sum->fetch(PDO::FETCH_ASSOC))
 				{
-                    		 echo money_format('Total: $%.2n', $row['Total']); 
-                    
+                    		 echo "Total: $".number_format($row['Total'], 0);
 
 				}
 			}
 			?>
 			</td>
-			<td><a href="eventDetails.php?id=<?=$g['event_id']?>">View</a></td>
-			<td><a href="edit.php?id=<?=$g['event_id']?>">Edit</a></td>
-			<td><a style="color:red" href="delete.php?id=<?=$g['event_id']?>">Delete</a></td>
+			<td><a href="eventDetails.php?eid=<?=$g['event_id']?>">View</a></td>
+			<td><a href="edit.php?eid=<?=$g['event_id']?>">Edit</a></td>
+			<td><a style="color:red" href="delete.php?eid=<?=$g['event_id']?>">Delete</a></td>
     </tr>
-    <? }
+    <?php }
 } else { ?>
     <tr>
       <td>No events found. Please create a new event.</td>
 
     </tr>
-<?php } ?>
+<?php }
+}?>
   </table>
 </div>
 
