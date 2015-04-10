@@ -27,9 +27,8 @@ function sanitize($data) {
     return $data;
 }
 
-switch ($action)
-  {
-    case 'new':
+switch ($action) {
+  case 'new':
 
     //Set Variable for event_id to use later
     $event_id = uniqid();
@@ -80,68 +79,68 @@ switch ($action)
 	  $cronday = substr($date, -2);
 	  $cronmonth = substr($date, -5, 2);
 
-
 	  $job = "0 0 ".$cronday." ".$cronmonth." * ".$_SERVER["DOCUMENT_ROOT"]."Donation-Center/xml.php?eid=".$event_id." >/dev/null 2>&1;";
 
-
-
-
     if ($createEvent->execute($params)){
-	     file_get_contents('http://donate.thespeedgamers.com/xml.php?eid='.$uid);
-	     $output = shell_exec('crontab -l');
-	     file_put_contents('/tmp/crontab.txt', $output.$job.PHP_EOL);
-	     exec('crontab /tmp/crontab.txt');
-	     $URL = './index.php';
+      file_get_contents('http://donate.thespeedgamers.com/xml.php?eid='.$uid);
+      $output = shell_exec('crontab -l');
+      file_put_contents('/tmp/crontab.txt', $output.$job.PHP_EOL);
+      exec('crontab /tmp/crontab.txt');
+      $URL = './index.php';
     } else {
+      $URL = './new-event.php';
+    }
 
-      //$URL = './new-event.php';
+  break;
+
+  case 'edit':
+    //Edit Event Name
+    $id = addslashes($_POST['id']);
+    $g['title'] = addslashes($_POST['event_name']);
+    $g['image_url'] = addslashes($_POST['image_url']);
+    $g['targetAmount'] = $_POST['target_amount'];
+
+    if (!empty($_POST['event_name'])) {
+      $g['title'] = addslashes($_POST['event_name']);
+    }
+
+    $putQuery  = 'UPDATE `dc_events` SET ';
+
+    foreach ($g as $key => $value) {
+      $updates[] = "`$key` = '$value'";
+    }
+
+    $putQuery .= implode(', ', $updates);
+    $putQuery .= ' WHERE `event_id` = \''.$id.'\';';
+    $success = mysqli_query($link, $putQuery);
+    //echo $putQuery;
+
+    if ($success) { $URL = './index.php';
+      file_get_contents('http://donate.thespeedgamers.com/xml.php?eid='.$id);
+    } else {
+      $URL = './edit.php';
     }
 
     break;
 
-    case 'edit':
-
-	//Edit Event Name
-      $id = addslashes($_POST['id']);
-      $g['title'] = addslashes($_POST['event_name']);
-	  $g['image_url'] = addslashes($_POST['image_url']);
-	  $g['targetAmount'] = $_POST['target_amount'];
-      if (!empty($_POST['event_name'])) { $g['title'] = addslashes($_POST['event_name']); }
-      $putQuery  = 'UPDATE `dc_events` SET ';
-      foreach ($g as $key => $value) {
-        $updates[] = "`$key` = '$value'";
-      }
-      $putQuery .= implode(', ', $updates);
-      $putQuery .= ' WHERE `event_id` = \''.$id.'\';';
-      $success = mysqli_query($link, $putQuery);
-      //echo $putQuery;
-
-      if ($success) { $URL = './index.php';
-	      file_get_contents('http://donate.thespeedgamers.com/xml.php?eid='.$id);
-      }
-      else { $URL = './edit.php'; }
-
-      break;
-
 		case 'make_current':
-			$id = addslashes($_GET['id']);
+		  $id = addslashes($_GET['id']);
 			mysqli_query($link, "UPDATE `dc_events` SET `default` = '0'");
 			mysqli_query($link, "UPDATE `dc_events` SET `default` = '1' WHERE `event_id` = '$id'");
 			$URL = './index.php';
-			break;
+		break;
 
-			case 'delete':
+		case 'delete':
 
-			if ($_GET['submitBtn'] == "Cancel")
-				{
+			if ($_GET['submitBtn'] == "Cancel") {
 					header("Location: /index.php");
-				}
+			}
 
 			$id = addslashes($_POST['id']);
 
 			mysqli_query($link, "DELETE FROM `dc_events` WHERE `event_id` = '$id'");
 			$URL = './index.php';
-			break;
+		break;
 
 
 
@@ -165,8 +164,10 @@ switch ($action)
 
 			$success = mysqli_query($link, $postQuery);
 			if ($success) {
-				$URL = './eventDetails.php?id='.$_POST['id'].''; }
-			else { $URL = './addIncentive.php?id='.$_POST['id'].''; }
+				$URL = './eventDetails.php?id='.$_POST['id'].'';
+      } else {
+        $URL = './addIncentive.php?id='.$_POST['id'].'';
+      }
 		break;
 
 
@@ -177,8 +178,8 @@ switch ($action)
 
 			$success = mysqli_query($link, $postQuery);
 			if ($success) {
-				$URL = $_SERVER['HTTP_REFERER']; }
-			else {  }
+				$URL = $_SERVER['HTTP_REFERER'];
+      } else {}
 
 			//$URL = $_SERVER['HTTP_REFERER'];
 		break;
@@ -191,16 +192,13 @@ switch ($action)
 
 			$success = mysqli_query($link, $postQuery);
 			if ($success) {
-				$URL = $_SERVER['HTTP_REFERER']; }
-			else {  }
+				$URL = $_SERVER['HTTP_REFERER'];
+      } else {}
 
 		break;
 
-    default:
-      break;
-  }
+}
 
 header("Location: $URL");
 
-//include(ROOT.'/inc/closedb.php');
 ?>
