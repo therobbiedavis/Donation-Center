@@ -1,5 +1,5 @@
 <?php
-session_start();
+if(!isset($_SESSION)){    session_start();}
 require_once '../classes/Membership.php';
 $membership = new Membership();
 
@@ -36,12 +36,12 @@ if($_POST && !empty($_POST['username']) && !empty($_POST['pwd'])) {
         	<label for="name">Username: </label>
             <input type="text" name="username" />
         </p>
-        
+
         <p>
         	<label for="pwd">Password: </label>
             <input type="password" name="pwd" />
         </p>
-        
+
         <p>
         	<input type="submit" id="submit" value="Login" name="submit" />
         </p>

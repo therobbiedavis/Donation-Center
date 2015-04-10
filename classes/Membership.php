@@ -28,7 +28,7 @@ class Membership {
 			}
 	}
 	function sid($un){
-		session_start();
+		if(!isset($_SESSION)){    	session_start();		}
 		$sid = session_id();
 		$mysql = New Mysql();
 		if ($mysql->set_sid($un, $sid)) {
