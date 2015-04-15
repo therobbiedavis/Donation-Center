@@ -11,8 +11,12 @@ $membership->confirm_Member();
 $admin_title = 'Manage Gallery Categories';
 $admin_subtitle = 'Edit Gallery_category';
 
-$id = $_GET['id'];
-$events = mysqli_fetch_array(mysqli_query($link, "SELECT * FROM `dc_events` WHERE `event_id` = '$id'"));
+$eid = $_GET['eid'];
+$params = array(':eid' => $_GET['eid']);
+$event = $link->prepare("SELECT * FROM `dc_events` WHERE `event_id` = :eid");
+$event->execute($params);
+
+$events = $event->fetch(PDO::FETCH_ASSOC);
 
 $eventtitle = $events['title'];
 ?>
@@ -38,8 +42,8 @@ $eventtitle = $events['title'];
 </div>
 
 <div id="gallery_categories_edit">
-  <form action="./functions.php?f=edit" method="post">
-  <input type="hidden" name="id" value="<?=$id?>" id="id">
+  <form action="functions.php?f=edit" method="post">
+  <input type="hidden" name="eid" value="<?php echo $eid; ?>" id="eid">
     <table>
 		<tr>
 			<td>Event Name</td>
@@ -53,7 +57,7 @@ $eventtitle = $events['title'];
 			<td>Image URL</td>
 			<td><input type="text" name="image_url" value="<?=$events['image_url'] ?>" /></td>
 		</tr>
-		
+
 		<tr>
 			<td colspan="2">
 				<input type="submit" name="submitBtn" value="Edit" id="submitBtn">
@@ -62,4 +66,3 @@ $eventtitle = $events['title'];
     </table>
   </form>
 </div>
-

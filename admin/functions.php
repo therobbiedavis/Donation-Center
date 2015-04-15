@@ -12,7 +12,12 @@ $userid = $link->prepare("SELECT id FROM users WHERE sessionid = :sid");
 $userid->execute($params);
 
 $sessid = $userid->fetchAll();
-$id = $_GET['id'];
+if (empty($_GET['eid'])) {
+
+} else {
+  $eid = $_GET['eid'];
+}
+
 
 $action = $_GET['f'];
 $todayDate = date('F j, Y  g:i a');
@@ -33,7 +38,6 @@ switch ($action) {
     //Set Variable for event_id to use later
     $event_id = uniqid();
 
-    print_r ($_POST);
     //Prepare PDO param
     $params = array(
       ':eid' => $event_id,
@@ -82,7 +86,7 @@ switch ($action) {
 	  $job = "0 0 ".$cronday." ".$cronmonth." * ".$_SERVER["DOCUMENT_ROOT"]."Donation-Center/xml.php?eid=".$event_id." >/dev/null 2>&1;";
 
     if ($createEvent->execute($params)){
-      file_get_contents('http://donate.thespeedgamers.com/xml.php?eid='.$uid);
+      file_get_contents($_SERVER["DOCUMENT_ROOT"].'Donation-Center/xml.php?eid='.$uid);
       $output = shell_exec('crontab -l');
       file_put_contents('/tmp/crontab.txt', $output.$job.PHP_EOL);
       exec('crontab /tmp/crontab.txt');
@@ -95,31 +99,37 @@ switch ($action) {
 
   case 'edit':
     //Edit Event Name
-    $id = addslashes($_POST['id']);
-    $g['title'] = addslashes($_POST['event_name']);
-    $g['image_url'] = addslashes($_POST['image_url']);
-    $g['targetAmount'] = $_POST['target_amount'];
+    print_r($_POST);
 
-    if (!empty($_POST['event_name'])) {
-      $g['title'] = addslashes($_POST['event_name']);
+    if (empty($_POST['image_url'])){
+      $params = array(
+        ':iurl' => ''
+      );
+    } else {
+      $params = array(
+        ':iurl' => sanitize($_POST['image_url'])
+      );
     }
 
-    $putQuery  = 'UPDATE `dc_events` SET ';
 
-    foreach ($g as $key => $value) {
-      $updates[] = "`$key` = '$value'";
-    }
+      $params[':title'] = sanitize($_POST['event_name']);
+      $params[':tamt'] = sanitize($_POST['target_amount']);
+      $params[':eid'] = $_POST['eid'];
+      $eid = $_POST['eid'];
 
-    $putQuery .= implode(', ', $updates);
-    $putQuery .= ' WHERE `event_id` = \''.$id.'\';';
-    $success = mysqli_query($link, $putQuery);
-    //echo $putQuery;
+    print_r($params);
 
-    if ($success) { $URL = './index.php';
-      file_get_contents('http://donate.thespeedgamers.com/xml.php?eid='.$id);
+    $updateEvent = $link->prepare("UPDATE `dc_events` SET `title` = :title, `image_url` = :iurl, `targetAmount` = :tamt WHERE `event_id` = :eid");
+
+
+    $link->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+    if ($updateEvent->execute($params)) {
+      $URL = './index.php';
+      file_get_contents("http://".$_SERVER['SERVER_NAME'].'/Donation-Center/xml.php?eid='.$eid);
     } else {
       $URL = './edit.php';
     }
+
 
     break;
 

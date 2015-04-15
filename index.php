@@ -1,12 +1,16 @@
 <?php
+if (empty($_GET['eid'])) {
+	echo "ERROR: Missing 'eid'";
+	die();
+}
 
 require '/admin/connect.php';
 
 //Parse the URL to get the event ID
 $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 $p = parse_str(parse_url($url, PHP_URL_QUERY), $array);
-$eid = $array['eid'];
 
+$eid = $array['eid'];
 //Setup PDO binds
 $params = array(':eid' => $array['eid']);
 
@@ -31,7 +35,7 @@ if ($incentives->execute($params)){
 }
 
 //Set variables from initial event details
-while($row = $event_list->fetchAll())
+while($row = $event_list->fetch(PDO::FETCH_ASSOC))
 {
 	foreach($row as $fieldname => $fieldvalue)
 	{
@@ -64,13 +68,13 @@ $clean_title = preg_replace("/\ (?=[a-z\d])/i", "+", $title);
 		<meta name="viewport" content="initial-scale=0.8; maximum-scale=0.8;">
 		<title>Choose Your Donation Amount</title>
 
-		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-		<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js"></script>
+		<script src="http://code.jquery.com/jquery-1.9.1.js?v=1"></script>
+		<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js?v=1"></script>
 
-		<link href='http://fonts.googleapis.com/css?family=Oswald:400,700' rel='stylesheet' type='text/css'>
-		<link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" media="screen" type="text/css" href="../css/donate.css?10" />
-		<link rel="stylesheet" media="screen and (max-device-width: 640px)" type="text/css" href="../css/mobile.css?" />
+		<link href='http://fonts.googleapis.com/css?family=Oswald:400,700&v=1' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700&v=1' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" media="screen" type="text/css" href="css/donate.css?v=1" />
+		<link rel="stylesheet" media="screen and (max-device-width: 640px)" type="text/css" href="css/mobile.css?v=1" />
 
 	</head>
 	<body style="margin:0 auto;text-align:center;">
@@ -119,7 +123,7 @@ $clean_title = preg_replace("/\ (?=[a-z\d])/i", "+", $title);
 									<select name="os0">
 										<option value="0">Nothing</option>
 									<?php
-									while($row = $incentives->fetchAll()) {
+									while($row = $incentives->fetch(PDO::FETCH_ASSOC)) {
 										if ($row['hidden'] == 0) { ?>
 										<option value="<?php echo stripslashes($row['name']);?>"><?php echo stripslashes($row['name']); if ($row['incentive'] == '0') {} else { echo (' - $'.$row['incentive']);} ?></option>
 									<?php
